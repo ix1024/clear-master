@@ -1,4 +1,10 @@
 const confetti = require("canvas-confetti").default
+
+// 获取随机数min,max之间的数
+export const getRandom = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 // 通过tabId 获取tab详细信息
 export const getTab = () => {
   return new Promise((resolve, reject) => {
@@ -93,7 +99,8 @@ export const clearData = async (options: any) => {
       })
     : {}
   const origins = origin && isCurrent ? [origin] : undefined
-
+  const timeout = getRandom(2, 3) * 1000
+  console.log(chrome.browsingData)
   await Promise.all([
     chrome.browsingData.remove(
       {
@@ -102,7 +109,7 @@ export const clearData = async (options: any) => {
       },
       obj
     ),
-    sleep(3000)
+    sleep(timeout)
   ])
   tips()
 
