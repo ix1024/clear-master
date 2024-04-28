@@ -20,6 +20,7 @@ import xz from "./xz.svg"
 
 import "./particles.js"
 
+import { ClearOutlined, LinkOutlined } from "@ant-design/icons"
 import { icons } from "antd/es/image/PreviewGroup"
 
 import { clearData, sleep, store } from "~utils"
@@ -70,13 +71,18 @@ const App = () => {
       setReload(reload)
       setSelected(selected || [])
       setCurrentSelected(currentSelected || [])
-      setSince(since)
+      setSince(
+        since || {
+          label: "时间不限",
+          value: 0
+        }
+      )
       setIsCurrent(isCurrent)
     })()
     particlesJS("particles-js", particlesOptions)
   }, [])
   const labelImage = <IconCheckbox color="rgba(255,255,255,0.1)" size={30} />
-  const labelImage1 = <IconCheckbox1 color="rgba(255,255,255,0.1)" size={30} />
+  const labelImage1 = <IconCheckbox1 color="rgba(255,255,255,0.1)" size={25} />
   const labelImage2 = <IconCheckbox2 color="rgba(255,255,255,0.1)" size={30} />
   const disabled = working
   const items = [
@@ -100,10 +106,84 @@ const App = () => {
     },
     {
       key: "2",
-      label: "清空设置",
+      label: (
+        <>
+          <ClearOutlined
+            style={{
+              marginRight: 10
+            }}
+          />
+          清空设置
+        </>
+      ),
       onClick: reset
+    },
+    {
+      key: "3",
+      label: (
+        <>
+          <a
+            target="_blank"
+            href="https://chromewebstore.google.com/detail/%E7%A0%81%E5%AE%A2%E5%8A%A9%E6%89%8B-codehelper/hbddmgloakfghiojikokknipjniamgpg?hl=zh-CN&authuser=0">
+            <LinkOutlined
+              style={{
+                marginRight: 10
+              }}
+            />{" "}
+            码客助手
+          </a>
+        </>
+      )
+    },
+    {
+      key: "4",
+      label: (
+        <>
+          <a
+            target="_blank"
+            href="https://chromewebstore.google.com/detail/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%85%B3%E9%94%AE%E5%AD%97%E5%B1%8F%E8%94%BD/hpoikjmhjobfgcmgahnonnjlndimmdec?hl=zh-CN&authuser=0">
+            <LinkOutlined
+              style={{
+                marginRight: 10
+              }}
+            />{" "}
+            搜索引擎关键字屏蔽
+          </a>
+        </>
+      )
+    },
+    {
+      key: "5",
+      label: (
+        <>
+          <a
+            target="_blank"
+            href="https://chromewebstore.google.com/detail/%E9%93%BE%E6%8E%A5%E4%BA%8C%E6%AC%A1%E7%A1%AE%E8%AE%A4%E7%BB%88%E7%BB%93%E8%80%85/kemaaflpcmmcpmoigmfimdhnbiabmcpk?hl=zh-CN&authuser=0">
+            <LinkOutlined
+              style={{
+                marginRight: 10
+              }}
+            />{" "}
+            链接二次确认终结者
+          </a>
+        </>
+      )
     }
   ]
+  useEffect(() => {
+    //监听消息
+    chrome.runtime.onMessage.addListener(async function (request) {
+      if (request.type === "clear") {
+        try {
+          setWorking(true)
+          await clearData()
+          setWorking(false)
+        } catch (error) {
+          setWorking(false)
+        }
+      }
+    })
+  }, [])
   return (
     <div className={css.wrap}>
       <div className={css.particles} id="particles-js"></div>
@@ -227,7 +307,7 @@ const App = () => {
             <span
               onClick={async () => {
                 setWorking(!working)
-                await clearData(isCurrent ? currentSelected : selected)
+                await clearData()
                 setWorking(false)
               }}>
               <img src={cleanCode} alt="" className={working ? css.img : ""} />

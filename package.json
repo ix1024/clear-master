@@ -10,9 +10,10 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.6",
     "antd": "^5.16.4",
     "canvas-confetti": "^1.9.2",
-    "plasmo": "0.85.2",
+    "plasmo": "0.86.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
@@ -29,12 +30,27 @@
   },
   "manifest": {
     "name": "一键清洁大师",
-    "version": "1.0.5",
+    "version": "1.1.0",
     "description": "一键清洁大师：专业的浏览器数据清理工具；超美动画，炫酷特效，让清理垃圾数据变得更有趣；一键清理多种缓存、历史记录、下载内容、表单、Cookies、密码、本地存储、本地数据库等。",
     "permissions": [
       "activeTab",
       "browsingData",
       "storage"
-    ]
+    ],
+    "commands": {
+      "run-clear": {
+        "suggested_key": {
+          "default": "Alt+Shift+M",
+          "mac": "Alt+Shift+M"
+        },
+        "description": "清除垃圾数据"
+      }
+    },
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+M",
+        "mac": "Alt+Shift+M"
+      }
+    }
   }
 }

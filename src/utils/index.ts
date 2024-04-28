@@ -10,7 +10,7 @@ export const getTab = () => {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0]
-      const { favIconUrl, title, url } = currentTab
+      const { favIconUrl, title, url } = currentTab || {}
 
       try {
         const newUrl = new URL(url)
@@ -86,32 +86,40 @@ export const tips = () => {
 }
 
 //
-export const clearData = async (options: any) => {
+export const clearData = async () => {
   const reload: any = await store.get("reload")
   const { origin } = ((await getTab()) || {}) as any
   const sinceValue: any = await store.get("since")
   const isCurrent: any = await store.get("isCurrent")
   const { value: since } = sinceValue || {}
+  const currentSelected: any = await store.get("currentSelected")
+  const selected: any = await store.get("selected")
   const obj = {}
+  const options = isCurrent ? currentSelected : selected
+  console.log(`isCurrent: ${isCurrent}`, options)
   Array.isArray(options)
     ? options?.forEach((item: any) => {
         obj[item] = true
       })
     : {}
   const origins = origin && isCurrent ? [origin] : undefined
-  const timeout = getRandom(2, 3) * 1000
-  console.log(chrome.browsingData)
+  const timeout = getRandom(0, 1) * 1000
+  // console.log(chrome.browsingData)
   await Promise.all([
-    chrome.browsingData.remove(
+    chrome?.browsingData?.remove(
       {
         since,
         origins
       },
       obj
-    ),
+    ) || sleep(1000),
     sleep(timeout)
   ])
-  tips()
+  try {
+    tips()
+  } catch (error) {
+    console.log("tips error")
+  }
 
   // 刷新当前页面
   // chrome.tabs.reload()
